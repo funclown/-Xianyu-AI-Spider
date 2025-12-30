@@ -1,0 +1,17 @@
+# 代理IP池配置文件（简化版）
+# 使用方法：将此文件重命名为 proxies.json，然后添加你的代理IP列表
+# 支持以下格式：
+#
+# [
+#   "http://proxy1.example.com:8080",
+#   "http://user:password@proxy2.example.com:8888",
+#   "socks5://127.0.0.1:1080",
+#   "https://proxy3.example.com:443"
+# ]
+#
+# 注意：
+# 1. 请确保代理IP可用且稳定
+# 2. 建议使用私密代理或付费代理，免费代理稳定性差
+# 3. 系统会自动验证代理可用性
+# 4. 代理失败5次后会自动停用，30分钟后重新激活
+# 5. 支持的协议: http, https, socks5

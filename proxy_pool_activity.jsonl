@@ -1,0 +1,4 @@
+
+{"timestamp": "2025-12-26T21:59:54.440277", "message": "⚙️ 配置已更新"}
+{"timestamp": "2025-12-26T22:00:02.947255", "message": "代理测试失败: Traceback (most recent call last):\n  File \"C:\\Users\\Administrator\\Desktop\\闲鱼修改\\update_proxies.py\", line 306, in <module>\n    main()\n    ~~~~^^\n  File \"C:\\Users\\Administrator\\Desktop\\闲鱼修改\\update_proxies.py\", line 264, in main\n    print(\"\\U0001f504 商业代理自动提取工具\")\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\nUnicodeEncodeError: 'gbk' codec can't encode character '\\U0001f504' in position 0: illegal multibyte sequence\n"}
+{"timestamp": "2025-12-26T22:10:23.512260", "message": "代理测试成功: None"}

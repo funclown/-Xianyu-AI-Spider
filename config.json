@@ -1,0 +1,43 @@
+[
+  {
+    "task_name": "MacBook Air M1",
+    "enabled": true,
+    "keyword": "macbook air m1",
+    "max_pages": 50,
+    "personal_only": true,
+    "min_price": "3000",
+    "max_price": "5000",
+    "cron": "0 0 * * *",
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/macbook_criteria.txt",
+    "is_running": false
+  },
+  {
+    "task_name": "DJI Mini 3 Pro",
+    "enabled": true,
+    "keyword": "mini 3 pro",
+    "max_pages": 100,
+    "personal_only": true,
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/dji_mini3_criteria.txt",
+    "min_price": "3500",
+    "max_price": "4500",
+    "cron": "0 0 * * *",
+    "is_running": false,
+    "description": "DJI Mini 3 Pro"
+  },
+  {
+    "task_name": "皮肤检测仪",
+    "enabled": true,
+    "keyword": "皮肤检测仪",
+    "max_pages": 3,
+    "personal_only": true,
+    "min_price": "150",
+    "max_price": "1000",
+    "cron": "0 0 * * *",
+    "description": "皮肤检测仪",
+    "ai_prompt_base_file": "prompts/base_prompt.txt",
+    "ai_prompt_criteria_file": "prompts/皮肤检测仪_criteria.txt",
+    "is_running": false
+  }
+]

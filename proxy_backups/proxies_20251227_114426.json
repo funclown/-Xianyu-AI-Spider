@@ -1,0 +1,15 @@
+[
+  {
+    "url": "http://d2131372390:2f1jism9@58.19.54.137:35169",
+    "host": "58.19.54.137",
+    "port": 35169,
+    "protocol": "http",
+    "username": "d2131372390",
+    "password": "2f1jism9",
+    "success_count": 0,
+    "fail_count": 0,
+    "last_used": "2025-12-27T11:43:35.192090",
+    "last_check": "2025-12-27T11:43:34.606441",
+    "is_active": true
+  }
+]

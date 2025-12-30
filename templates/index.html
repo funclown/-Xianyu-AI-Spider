@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>闲鱼智能监控机器人 - 管理后台</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=2.18">
+    <style>
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            display: inline-block;
+            line-height: 1.5;
+            text-align: center;
+            vertical-align: baseline;
+            white-space: nowrap;
+        }
+
+        .status-running {
+            background-color: #28a745; /* green */
+        }
+
+        .status-stopped {
+            background-color: #6c757d; /* gray */
+        }
+
+        .tasks-table .action-btn {
+            padding: 4px 8px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .tasks-table .run-task-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .tasks-table .stop-task-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .tasks-table .action-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .modal-content.large {
+            max-width: 800px;
+        }
+
+        .instructions {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            padding-left: 35px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .code-block {
+            position: relative;
+            background-color: #eef;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        .code-block .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 2px 6px;
+        }
+
+        .login-status-widget {
+            position: absolute;
+            top: 50%;
+            right: 32px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 102; /* Ensure it's above other header content */
+            display: block;
+        }
+
+        .login-status-widget .status-text {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 24px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .login-status-widget .status-text:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .login-status-widget .status-ok {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.95) 0%, rgba(25, 135, 84, 0.95) 100%);
+        }
+
+        .login-status-widget .status-error {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%);
+        }
+
+        .login-status-widget .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 0;
+            padding-top: 8px;
+            background-color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            min-width: 140px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-status-widget:hover .dropdown-menu,
+        .login-status-widget .dropdown-menu:hover {
+            display: block;
+        }
+
+        .login-status-widget .dropdown-item {
+            display: block;
+            padding: 12px 16px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .login-status-widget .dropdown-item:hover {
+            background-color: #f0f2f5;
+            color: #1890ff;
+        }
+
+        .login-status-widget .dropdown-item.delete {
+            color: #dc3545;
+        }
+
+        .login-status-widget .dropdown-item.delete:hover {
+            background-color: #fff1f0;
+            color: #d9363e;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-title-wrapper">
+        <div class="header-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                <rect x="4" y="8" width="24" height="18" rx="3" stroke="currentColor" stroke-width="2"/>
+                <circle cx="10" cy="14" r="1.5" fill="currentColor"/>
+                <circle cx="15" cy="14" r="1.5" fill="currentColor"/>
+                <path d="M20 14L26 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M4 12H28" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+            </svg>
+        </div>
+        <div class="header-text">
+            <h1>闲鱼智能监控机器人</h1>
+            <span class="header-subtitle">管理后台</span>
+        </div>
+    </div>
+    <div id="login-status-widget-container"></div>
+</header>
+<div class="container">
+    <aside>
+        <nav>
+            <ul>
+                <li><a href="#tasks" class="nav-link active">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="nav-icon">
+                        <rect x="2" y="3" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M6 7H12M6 10H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span>任务管理</span>
+                </a></li>
+                <li><a href="#results" class="nav-link">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="nav-icon">
+                        <path d="M3 3H15C16.1 3 17 3.9 17 5V13C17 14.1 16.1 15 15 15H3C1.9 15 1 14.1 1 13V5C1 3.9 1.9 3 3 3Z" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="6" cy="9" r="1.5" fill="currentColor"/>
+                        <path d="M9 9H15M9 11H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span>结果查看</span>
+                </a></li>
+                <li><a href="#logs" class="nav-link">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="nav-icon">
+                        <path d="M2 4H16V14H2V4Z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M6 1V4M12 1V4M6 8H10M6 11H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span>运行日志</span>
+                </a></li>
+                <li><a href="#settings" class="nav-link">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" class="nav-icon">
+                        <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M9 6V9L11 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        <circle cx="14" cy="4" r="1.5" fill="currentColor"/>
+                        <circle cx="14" cy="14" r="1.5" fill="currentColor"/>
+                        <circle cx="4" cy="14" r="1.5" fill="currentColor"/>
+                    </svg>
+                    <span>系统设置</span>
+                </a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main id="main-content">
+        <!-- 内容将根据侧边栏选择动态加载 -->
+    </main>
+</div>
+
+<!-- Add Task Modal -->
+<div id="add-task-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>创建新监控任务 (AI驱动)</h2>
+            <button id="close-modal-btn" class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="add-task-form">
+                <div class="form-group">
+                    <label for="task-name">任务名称</label>
+                    <input type="text" id="task-name" name="task_name" placeholder="例如：索尼 A7M4 相机" required>
+                </div>
+                <div class="form-group">
+                    <label for="keyword">搜索关键词</label>
+                    <input type="text" id="keyword" name="keyword" placeholder="例如：a7m4" required>
+                </div>
+                <div class="form-group form-group-inline">
+                    <div>
+                        <label for="min-price">价格范围 (可选)</label>
+                        <input type="number" id="min-price" name="min_price" placeholder="最低价">
+                    </div>
+                    <span>-</span>
+                    <div>
+                        <label for="max-price">&nbsp;</label>
+                        <input type="number" id="max-price" name="max_price" placeholder="最高价">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="max-pages">最大搜索页数</label>
+                    <input type="number" id="max-pages" name="max_pages" value="3" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="task-cron">定时执行 (Cron 表达式) <a href="https://crontab.guru/" target="_blank"
+                                                                     title="点击查看Cron表达式帮助">[?]</a></label>
+                    <input type="text" id="task-cron" name="cron" placeholder="分 时 日 月 周 (例如: 0 8 * * *)">
+                    <p class="form-hint">留空则不启用定时执行。例如 "0 22 * * *" 表示每晚22:00执行。</p>
+                </div>
+                <div class="form-group">
+                    <label for="task-description">详细购买需求</label>
+                    <textarea id="task-description" name="description" rows="6"
+                              placeholder="请用自然语言详细描述你的购买需求，AI将根据此描述生成分析标准。例如：我想买一台95新以上的索尼A7M4相机，预算在10000到13000元之间，快门数要低于5000。必须是国行且配件齐全。优先考虑个人卖家..."
+                              required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="personal-only" name="personal_only" checked>
+                        仅筛选个人闲置卖家
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-add-task-btn" class="control-button">取消</button>
+            <button id="save-new-task-btn" class="control-button primary-btn">
+                <span class="btn-text">创建任务</span>
+                <span class="spinner" style="display: none;"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- refresh criteria Modal -->
+<div id="refresh-criteria-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>重新生成AI标准</h2>
+            <button id="close-refresh-criteria-btn" class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="refresh-criteria-form">
+                <div class="form-group">
+                    <label for="refresh-criteria-description">详细购买需求</label>
+                    <textarea id="refresh-criteria-description" name="description" rows="6"
+                              placeholder="请用自然语言详细描述你的购买需求，AI将根据此描述生成分析标准。例如：我想买一台95新以上的索尼A7M4相机，预算在10000到13000元之间，快门数要低于5000。必须是国行且配件齐全。优先考虑个人卖家..."
+                              required></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-refresh-criteria-btn" class="control-button">取消</button>
+            <button id="refresh-criteria-btn" class="control-button primary-btn">
+                <span class="btn-text">重新生成</span>
+                <span class="spinner" style="display: none;"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Task Modal -->
+<div id="edit-task-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2>编辑任务</h2>
+            <button id="close-edit-task-btn" class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="edit-task-form">
+                <input type="hidden" id="edit-task-id" name="task_id">
+
+                <div class="form-group">
+                    <label for="edit-task-name">任务名称</label>
+                    <input type="text" id="edit-task-name" name="task_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-keyword">关键词</label>
+                    <input type="text" id="edit-keyword" name="keyword" required>
+                </div>
+
+                <div class="form-group">
+                    <label>价格范围</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="edit-min-price" name="min_price" placeholder="最低价（留空不限）">
+                        <span>-</span>
+                        <input type="text" id="edit-max-price" name="max_price" placeholder="最高价（留空不限）">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="edit-personal-only" name="personal_only">
+                        仅显示个人闲置
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-max-pages">最大页数</label>
+                    <input type="number" id="edit-max-pages" name="max_pages" min="1" value="3" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-cron-preset">定时规则（常用预设）</label>
+                    <select id="edit-cron-preset" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="">-- 不使用定时 --</option>
+                        <option value="0 */2 * * *">每2小时</option>
+                        <option value="0 */4 * * *">每4小时</option>
+                        <option value="0 */6 * * *">每6小时</option>
+                        <option value="0 */12 * * *">每12小时</option>
+                        <option value="0 0 * * *">每天0点</option>
+                        <option value="0 9 * * *">每天上午9点</option>
+                        <option value="0 18 * * *">每天下午6点</option>
+                        <option value="0 9,18 * * *">每天上午9点和下午6点</option>
+                        <option value="0 9-18/3 * * *">每天9点到18点，每3小时</option>
+                        <option value="0 0 * * 1">每周一早上0点</option>
+                        <option value="custom">自定义...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-cron">自定义Cron表达式</label>
+                    <input type="text" id="edit-cron" name="cron" placeholder="留空则不使用定时" style="font-family: monospace;">
+                    <small style="color: #666; font-size: 12px;">格式: 分 时 日 月 周（例如：0 9 * * * 表示每天上午9点）</small>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-edit-task-btn" class="control-button">取消</button>
+            <button id="save-edit-task-btn" class="control-button primary-btn">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- JSON Viewer Modal -->
+<div id="json-viewer-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>AI 分析详情</h2>
+            <button id="close-json-viewer-btn" class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+            <pre id="json-viewer-content"></pre>
+        </div>
+    </div>
+</div>
+
+<!-- Manual Login State Modal -->
+<div id="login-state-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content large">
+        <div class="modal-header">
+            <h2>手动更新登录状态 (Cookie)</h2>
+            <button id="close-login-state-modal-btn" class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="login-state-form" onsubmit="return false;">
+
+                <!-- Chrome Extension Method -->
+                <h3 style="margin-top: 20px; margin-bottom: 10px;">使用Chrome扩展（推荐）</h3>
+                <p>此方法用于在无法运行图形化浏览器的服务器上更新闲鱼登录凭证。</p>
+                <p>安装Chrome扩展来提取闲鱼登录状态：</p>
+                <ol class="instructions">
+                    <li>在Chrome浏览器中安装 <a href="https://chromewebstore.google.com/detail/xianyu-login-state-extrac/eidlpfjiodpigmfcahkmlenhppfklcoa" target="_blank"
+                                                rel="noopener noreferrer">闲鱼登录状态提取扩展</a></li>
+                    <li>打开并登录 <a href="https://www.goofish.com" target="_blank"
+                                      rel="noopener noreferrer">闲鱼官网</a>。
+                    </li>
+                    <li>登录成功后，点击浏览器工具栏中的该扩展图标。</li>
+                    <li>点击"提取登录状态"按钮获取登录信息。</li>
+                    <li>点击"复制到剪贴板"按钮。</li>
+                    <li>将复制的内容粘贴到下方的文本框中，然后点击"保存"。</li>
+                </ol>
+                <div class="form-group">
+                    <label for="login-state-content">粘贴JSON内容:</label>
+                    <textarea id="login-state-content" name="content" rows="8"
+                              placeholder="请在此处粘贴从浏览器扩展复制的JSON文本..."></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-login-state-btn" type="button" class="control-button">取消</button>
+            <button id="save-login-state-btn" type="button" class="control-button primary-btn">保存</button>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/main.js?v=2.25"></script>
+</body>
+</html>

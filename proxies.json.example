@@ -1,0 +1,35 @@
+[
+  {
+    "url": "http://123.456.789.0:8080",
+    "host": "123.456.789.0",
+    "port": 8080,
+    "protocol": "http",
+    "username": null,
+    "password": null,
+    "success_count": 0,
+    "fail_count": 0,
+    "is_active": true
+  },
+  {
+    "url": "http://user:pass@proxy.example.com:8888",
+    "host": "proxy.example.com",
+    "port": 8888,
+    "protocol": "http",
+    "username": "user",
+    "password": "pass",
+    "success_count": 0,
+    "fail_count": 0,
+    "is_active": true
+  },
+  {
+    "url": "socks5://127.0.0.1:1080",
+    "host": "127.0.0.1",
+    "port": 1080,
+    "protocol": "socks5",
+    "username": null,
+    "password": null,
+    "success_count": 0,
+    "fail_count": 0,
+    "is_active": true
+  }
+]

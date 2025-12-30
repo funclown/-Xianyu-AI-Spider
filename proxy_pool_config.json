@@ -1,0 +1,14 @@
+{
+  "enabled": false,
+  "provider": "kuaidaili",
+  "kuaidaili_orderid": "946673072613137",
+  "kuaidaili_secret_id": "o44z6ei7x5ersf2avrmi",
+  "kuaidaili_secret_key": "1n82kbzbgpauwyvwz1blhow6w5l76hzu",
+  "extract_num": 1,
+  "update_interval": 18,
+  "proxy_expiry": 25,
+  "auto_update": true,
+  "min_proxies": 0,
+  "smart_replenish": true,
+  "on_demand_only": true
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "url": "http://d2131372390:2f1jism9@144.48.212.26:21928",
+    "host": "144.48.212.26",
+    "port": 21928,
+    "protocol": "http",
+    "username": "d2131372390",
+    "password": "2f1jism9",
+    "success_count": 0,
+    "fail_count": 0,
+    "last_used": "2025-12-27T18:07:40.638001",
+    "last_check": "2025-12-27T18:07:40.077741",
+    "is_active": true
+  }
+]
